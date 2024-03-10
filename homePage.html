@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sudoku Solver</title>
+  <style>
+    body {
+      font-family: Calibri, sans-serif;
+    }
+    #container {
+      text-align: center;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 2em;
+      margin: 0 auto;
+    }
+    colgroup, tbody {
+      border: solid medium;
+    }
+    td {
+      border: solid thin;
+      height: 1.4em;
+      width: 1.4em;
+      text-align: center;
+      padding: 0;
+    }
+    button {
+      margin-top: 15px;
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>Sudoku Solver</h1>
+    <table id="sudoku-board">
+      <colgroup><col><col><col>
+      <colgroup><col><col><col>
+      <colgroup><col><col><col>
+      <tbody>
+        <tr>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+        </tr>
+        <!-- Repeat rows for the entire board -->
+      </tbody>
+    </table>
+    <div>
+      <button id="solve-button">Solve!</button>
+    </div>
+    <div>
+      <button id="clear-button">Clear board</button>
+    </div>
+  </div>
+  <script src="solver.js"></script>
+  <script>
+    document.getElementById("solve-button").addEventListener("click", function(event) {
+      var boardString = boardToString();
+      var solution = SudokuSolver.solve(boardString);
+      if (solution) {
+        stringToBoard(solution);
+      } else {
+        alert("Invalid board!");
+      }
+    });
+
+    document.getElementById("clear-button").addEventListener("click", clearBoard);
+
+    function clearBoard() {
+      var tds = document.querySelectorAll("#sudoku-board td[contenteditable]");
+      tds.forEach(function(td) {
+        td.innerText = "";
+      });
+    }
+
+    function boardToString() {
+      var string = "";
+      var tds = document.querySelectorAll("#sudoku-board td[contenteditable]");
+      tds.forEach(function(td) {
+        string += td.innerText.trim() || "-";
+      });
+      return string;
+    }
+
+    function stringToBoard(string) {
+      var tds = document.querySelectorAll("#sudoku-board td[contenteditable]");
+      for (var i = 0; i < string.length; i++) {
+        if (i >= tds.length) break;
+        var digit = string.charAt(i);
+        tds[i].innerText = digit !== "-" ? digit : "";
+      }
+    }
+  </script>
+</body>
+</html>
